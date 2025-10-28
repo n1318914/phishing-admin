@@ -7,7 +7,6 @@ package router
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/net/ghttp"
 	"hotgo/addons/hgexample/controller/websocket"
 	"hotgo/addons/hgexample/controller/websocket/handler"
 	"hotgo/addons/hgexample/global"
@@ -15,6 +14,8 @@ import (
 	"hotgo/internal/library/addons"
 	"hotgo/internal/service"
 	ws "hotgo/internal/websocket"
+
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 // WebSocket ws路由配置
@@ -35,6 +36,6 @@ func WebSocket(ctx context.Context, group *ghttp.RouterGroup) {
 
 	// 注册消息路由
 	ws.RegisterMsg(ws.EventHandlers{
-		"admin/addons/hgexample/testMessage": handler.Index.TestMessage, // 测试消息
+		"websocket/addons/hgexample/testMessage": handler.Index.TestMessage, // 测试消息
 	})
 }

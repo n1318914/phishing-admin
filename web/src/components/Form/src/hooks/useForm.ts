@@ -23,6 +23,7 @@ export function useForm(props?: Props): UseFormReturnType {
   }
 
   function register(instance: FormActionType) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     isProdMode() &&
       onUnmounted(() => {
         formRef.value = null;
@@ -36,6 +37,7 @@ export function useForm(props?: Props): UseFormReturnType {
     watch(
       () => props,
       () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         props && instance.setProps(getDynamicProps(props));
       },
       {

@@ -40,6 +40,7 @@
 
   const formValue = ref({
     basicTest: 'HotGo',
+    test: 'HotGo222222',
   });
 
   function formSubmit() {

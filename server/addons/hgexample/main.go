@@ -7,8 +7,6 @@ package hgexample
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/net/ghttp"
-	"github.com/gogf/gf/v2/os/gctx"
 	_ "hotgo/addons/hgexample/crons"
 	"hotgo/addons/hgexample/global"
 	_ "hotgo/addons/hgexample/logic"
@@ -17,6 +15,9 @@ import (
 	"hotgo/internal/library/addons"
 	"hotgo/internal/service"
 	"sync"
+
+	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/gctx"
 )
 
 type module struct {

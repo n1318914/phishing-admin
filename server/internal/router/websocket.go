@@ -7,7 +7,6 @@ package router
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/net/ghttp"
 	"hotgo/internal/consts"
 	controller "hotgo/internal/controller/websocket"
 	"hotgo/internal/controller/websocket/handler/admin"
@@ -15,6 +14,8 @@ import (
 	"hotgo/internal/service"
 	"hotgo/internal/websocket"
 	"hotgo/utility/simple"
+
+	"github.com/gogf/gf/v2/net/ghttp"
 )
 
 // WebSocket ws路由配置

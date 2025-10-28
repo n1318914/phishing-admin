@@ -68,7 +68,7 @@
   const messages = ref<Message[]>([]);
   const inputMessage = ref('你好，HotGo');
   const isInput = ref(false);
-  const testMessageEvent = 'admin/addons/hgexample/testMessage';
+  const testMessageEvent = 'websocket/addons/hgexample/testMessage';
 
   enum Enum {
     SendType = 1, // 发送类型
