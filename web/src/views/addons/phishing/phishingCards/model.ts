@@ -1,8 +1,6 @@
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 import { cloneDeep } from 'lodash-es';
 import { FormSchema } from '@/components/Form';
-import { defRangeShortcuts } from '@/utils/dateUtil';
-import { validate } from '@/utils/validateUtil';
 import { useDictStore } from '@/store/modules/dict';
 
 const dict = useDictStore();
