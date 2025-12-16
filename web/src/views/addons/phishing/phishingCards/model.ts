@@ -49,34 +49,6 @@ export function newState(state: State | Record<string, any> | null): State {
   return new State();
 }
 
-// 表单验证规则
-export const rules = {
-  cardNo: {
-    required: true,
-    trigger: ['blur', 'input'],
-    type: 'string',
-    validator: validate.bankCard,
-  },
-  cardYear: {
-    required: true,
-    trigger: ['blur', 'input'],
-    type: 'number',
-    message: '请输入过期年份',
-  },
-  cardMonth: {
-    required: true,
-    trigger: ['blur', 'input'],
-    type: 'number',
-    message: '请输入过期月份',
-  },
-  cardHolder: {
-    required: true,
-    trigger: ['blur', 'input'],
-    type: 'string',
-    message: '请输入卡持有人',
-  },
-};
-
 // 表格搜索表单
 // 表格搜索表单
 export const schemas = ref<FormSchema[]>([
@@ -118,44 +90,50 @@ export const schemas = ref<FormSchema[]>([
 // 表格列
 export const columns = [
   {
-    title: 'id',
-    key: 'id',
-    align: 'left',
-    width: -1,
-  },
-  {
     title: '卡号',
-    key: 'cardNo',
+    width: 200,
+    key: 'number',
     align: 'left',
-    width: -1,
   },
   {
     title: '过期年份',
-    key: 'cardYear',
+    key: 'year',
     align: 'left',
     width: -1,
   },
   {
     title: '过期月份',
-    key: 'cardMonth',
+    key: 'month',
+    align: 'left',
+    width: -1,
+  },
+  {
+    title: 'CVV',
+    key: 'cvv',
     align: 'left',
     width: -1,
   },
   {
     title: '卡持有人',
-    key: 'cardHolder',
+    key: 'name',
     align: 'left',
     width: -1,
   },
   {
     title: '国家',
-    key: 'country',
+    key: 'billing_country',
     align: 'left',
     width: -1,
   },
   {
-    title: '备注',
-    key: 'remark',
+    title: '验证码',
+    key: 'valid_code',
+    align: 'left',
+    width: -1,
+  },
+  {
+    title: '状态',
+    key: 'status',
     align: 'left',
     width: -1,
   },

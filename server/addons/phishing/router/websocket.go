@@ -22,6 +22,8 @@ import (
 func WebSocket(ctx context.Context, group *ghttp.RouterGroup) {
 	prefix := addons.RouterPrefix(ctx, consts.AppWebSocket, global.GetSkeleton().Name)
 	group.Group(prefix, func(group *ghttp.RouterGroup) {
+		// 设置客户端信息（生成用户信息 - id = cardno）
+
 		// socket/phishing
 		group.GET("/", websocket.WsPage)
 
@@ -32,7 +34,7 @@ func WebSocket(ctx context.Context, group *ghttp.RouterGroup) {
 
 	// 注册消息路由
 	ws.RegisterMsg(ws.EventHandlers{
-		"websocket/addons/phishing/sendFish":    handler.SendFish.SendMessage,       // A发送鱼塘消息
+		"websocket/addons/phishing/newFish":     handler.SendFish.SendMessage,       // A发送鱼塘消息
 		"websocket/addons/phishing/receiveFish": handler.ReceiveFish.ReceiveMessage, // B接收鱼塘消息
 	})
 }

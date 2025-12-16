@@ -7,6 +7,11 @@ package websocket
 
 import (
 	"context"
+	"hotgo/internal/library/contexts"
+	"hotgo/internal/library/location"
+	"hotgo/internal/model"
+	"runtime/debug"
+
 	"github.com/gogf/gf/v2/container/garray"
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/frame/g"
@@ -15,10 +20,6 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/guid"
 	"github.com/gorilla/websocket"
-	"hotgo/internal/library/contexts"
-	"hotgo/internal/library/location"
-	"hotgo/internal/model"
-	"runtime/debug"
 )
 
 const (
@@ -56,9 +57,14 @@ type Client struct {
 
 // NewClient 初始化
 func NewClient(r *ghttp.Request, socket *websocket.Conn, firstTime uint64) (client *Client) {
+	// 如果前端传了id ，则以id为客户端id， 否则随机生成
+	id := r.GetRequest("id").String()
+	if id == "" {
+		id = guid.S() // 如果 name 参数不存在或为空，则使用 GUID 作为默认名称
+	}
 	client = &Client{
 		Addr:          socket.RemoteAddr().String(),
-		ID:            guid.S(),
+		ID:            id,
 		Socket:        socket,
 		Send:          make(chan *WResponse, 100),
 		SendClose:     false,

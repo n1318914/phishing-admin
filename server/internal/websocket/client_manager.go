@@ -8,11 +8,12 @@ package websocket
 import (
 	"context"
 	"fmt"
+	"runtime/debug"
+	"sync"
+
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcron"
 	"github.com/gogf/gf/v2/os/gtime"
-	"runtime/debug"
-	"sync"
 )
 
 // ClientManager 客户端管理
@@ -33,14 +34,15 @@ type ClientManager struct {
 
 func NewClientManager() (clientManager *ClientManager) {
 	clientManager = &ClientManager{
-		Clients:       make(map[*Client]bool),
-		Users:         make(map[string][]*Client),
-		Register:      make(chan *Client, 1000),
-		Unregister:    make(chan *Client, 1000),
-		Broadcast:     make(chan *WResponse, 1000),
-		TagBroadcast:  make(chan *TagWResponse, 1000),
-		UserBroadcast: make(chan *UserWResponse, 1000),
-		closeSignal:   make(chan struct{}, 1),
+		Clients:         make(map[*Client]bool),
+		Users:           make(map[string][]*Client),
+		Register:        make(chan *Client, 1000),
+		Unregister:      make(chan *Client, 1000),
+		Broadcast:       make(chan *WResponse, 1000),
+		ClientBroadcast: make(chan *ClientWResponse, 1000),
+		TagBroadcast:    make(chan *TagWResponse, 1000),
+		UserBroadcast:   make(chan *UserWResponse, 1000),
+		closeSignal:     make(chan struct{}, 1),
 	}
 	return
 }
@@ -136,6 +138,11 @@ func (manager *ClientManager) AddUsers(key string, client *Client) {
 func (manager *ClientManager) DelUsers(client *Client) (result bool) {
 	manager.UserLock.Lock()
 	defer manager.UserLock.Unlock()
+	// 不存在直接返回
+	if client.User == nil {
+		return true
+	}
+
 	key := GetUserKey(client.User.Id)
 	if clients, ok := manager.Users[key]; ok {
 		for _, value := range clients {
@@ -195,7 +202,6 @@ func (manager *ClientManager) EventUnregister(client *Client) {
 		// 不是当前连接的客户端
 		return
 	}
-
 	client.close()
 }
 
@@ -277,7 +283,7 @@ func (manager *ClientManager) start() {
 			clients := manager.GetClients()
 
 			for conn := range clients {
-				if conn.User.Id == message.UserID {
+				if conn.User != nil && conn.User.Id == message.UserID {
 					if message.WResponse.Timestamp == 0 {
 						message.WResponse.Timestamp = gtime.Now().Timestamp()
 					}

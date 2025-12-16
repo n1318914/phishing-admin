@@ -8,24 +8,21 @@
     <n-card :bordered="false" class="proCard">
       <BasicTable
         ref="actionRef"
-        openChecked
+        :dataSource="tableData"
         :columns="columns"
-        :request="loadDataTable"
-        :row-key="(row) => row.id"
+        :row-key="(row) => row.number"
         :actionColumn="actionColumn"
         :scroll-x="scrollX"
         :resizeHeightOffset="-10000"
         :checked-row-keys="checkedIds"
-        @update:checked-row-keys="handleOnCheckedRow"
+        :pagination="false"
       />
     </n-card>
-    <Edit ref="editRef" @reloadTable="reloadTable" />
-    <View ref="viewRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import {h, reactive, ref, computed, onMounted, onBeforeUnmount} from 'vue';
+  import { h, reactive, ref, computed, onMounted, onBeforeUnmount } from 'vue';
   import { useDialog, useMessage } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
@@ -48,58 +45,24 @@ import {h, reactive, ref, computed, onMounted, onBeforeUnmount} from 'vue';
   const searchFormRef = ref<any>({});
   const editRef = ref();
   const viewRef = ref();
+  const tableData = ref([]);
   const checkedIds = ref([]);
-  const receiveFish = 'admin/addons/phishing/receiveFish';
+  const receiveFish = 'websocket/addons/phishing/newFish';
 
   const actionColumn = reactive({
-    width: 288,
+    width: 100,
     title: '操作',
     key: 'action',
     fixed: 'right',
-    render(record: State) {
+    render(record) {
       return h(TableAction as any, {
         style: 'button',
         actions: [
           {
-            label: '编辑',
-            onClick: handleEdit.bind(null, record),
-            auth: ['/phishing/phishingCards/edit'],
-          },
-
-          {
-            label: '禁用',
-            onClick: handleStatus.bind(null, record, 2),
-            ifShow: () => {
-              return record.status === 1;
-            },
-            auth: ['/phishing/phishingCards/status'],
-          },
-          {
-            label: '启用',
-            onClick: handleStatus.bind(null, record, 1),
-            ifShow: () => {
-              return record.status === 2;
-            },
-            auth: ['/phishing/phishingCards/status'],
-          },
-          {
             label: '删除',
             onClick: handleDelete.bind(null, record),
-            auth: ['/phishing/phishingCards/delete'],
           },
         ],
-        dropDownActions: [
-          {
-            label: '查看详情',
-            key: 'view',
-            auth: ['/phishing/phishingCards/view'],
-          },
-        ],
-        select: (key) => {
-          if (key === 'view') {
-            return handleView(record);
-          }
-        },
       });
     },
   });
@@ -147,10 +110,14 @@ import {h, reactive, ref, computed, onMounted, onBeforeUnmount} from 'vue';
       positiveText: '确定',
       negativeText: '取消',
       onPositiveClick: () => {
-        Delete(record).then((_res) => {
+        // 从 tableData 中删除对应的数据
+        const index = tableData.value.findIndex((item) => item.number === record.number);
+        if (index !== -1) {
+          tableData.value.splice(index, 1);
           message.success('删除成功');
-          reloadTable();
-        });
+        } else {
+          message.error('未找到要删除的数据');
+        }
       },
     });
   }
@@ -195,17 +162,17 @@ import {h, reactive, ref, computed, onMounted, onBeforeUnmount} from 'vue';
 
   // 收到消息
   const onMessage = (res: WebSocketMessage) => {
-    const msg: Message = {
-      type: Enum.ReceiveType,
-      content: res.data.message,
-      time: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-    };
-    message.success('收到websocket消息： ' + msg);
+    // 2. 使用 URLSearchParams 解析字符串
+    const params = new URLSearchParams(res.data.message);
+    const resultObject: { [key: string]: string } = Object.fromEntries(params.entries());
+    console.log(resultObject);
+    tableData.value.unshift(resultObject);
   };
 
   onMounted(() => {
     loadOptions();
     // 在当前页面注册消息监听
+    console.log('监听：', receiveFish);
     addOnMessage(receiveFish, onMessage);
   });
 
