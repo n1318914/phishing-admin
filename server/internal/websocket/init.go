@@ -6,13 +6,14 @@
 package websocket
 
 import (
+	"net/http"
+
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/grpool"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gorilla/websocket"
-	"net/http"
 )
 
 var (
@@ -36,6 +37,7 @@ func Stop() {
 
 // WsPage ws入口
 func WsPage(r *ghttp.Request) {
+	id := r.Get("id")
 	upGrader := websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
@@ -48,6 +50,7 @@ func WsPage(r *ghttp.Request) {
 		return
 	}
 	currentTime := uint64(gtime.Now().Unix())
+	r.SetParam("id", id)
 	client := NewClient(r, conn, currentTime)
 	go client.read()
 	go client.write()

@@ -125,7 +125,7 @@ export const columns = [
   },
   {
     title: '验证码',
-    key: 'valid_code',
+    key: 'code',
     align: 'left',
     width: -1,
   },

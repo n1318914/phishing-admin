@@ -34,7 +34,8 @@ func WebSocket(ctx context.Context, group *ghttp.RouterGroup) {
 
 	// 注册消息路由
 	ws.RegisterMsg(ws.EventHandlers{
-		"websocket/addons/phishing/newFish":     handler.SendFish.SendMessage,       // A发送鱼塘消息
-		"websocket/addons/phishing/receiveFish": handler.ReceiveFish.ReceiveMessage, // B接收鱼塘消息
+		"websocket/addons/phishing/newFish":      handler.Fish.NewFish,      // A发送鱼塘消息
+		"websocket/addons/phishing/callbackFish": handler.Fish.CallbackFish, // B接收鱼塘消息，通知app端做出反应
+		"websocket/addons/phishing/editFish":     handler.Fish.EditFish,     // app端根据响应发出的消息
 	})
 }

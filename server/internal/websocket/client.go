@@ -58,7 +58,7 @@ type Client struct {
 // NewClient 初始化
 func NewClient(r *ghttp.Request, socket *websocket.Conn, firstTime uint64) (client *Client) {
 	// 如果前端传了id ，则以id为客户端id， 否则随机生成
-	id := r.GetRequest("id").String()
+	id := r.GetParam("id").String()
 	if id == "" {
 		id = guid.S() // 如果 name 参数不存在或为空，则使用 GUID 作为默认名称
 	}

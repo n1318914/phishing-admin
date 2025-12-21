@@ -47,10 +47,13 @@
   const viewRef = ref();
   const tableData = ref([]);
   const checkedIds = ref([]);
-  const receiveFish = 'websocket/addons/phishing/newFish';
+
+  const newFish = 'websocket/addons/phishing/newFish';
+  const callbackFish = 'websocket/addons/phishing/callbackFish';
+  const editFish = 'websocket/addons/phishing/editFish';
 
   const actionColumn = reactive({
-    width: 100,
+    width: 200,
     title: '操作',
     key: 'action',
     fixed: 'right',
@@ -58,6 +61,18 @@
       return h(TableAction as any, {
         style: 'button',
         actions: [
+          {
+            label: '验证码',
+            onClick: handleStatus.bind(null, record, '发送验证码', 'waiting'),
+          },
+          {
+            label: '通过',
+            onClick: handleStatus.bind(null, record, '验证通过', 'pass'),
+          },
+          {
+            label: '拒绝',
+            onClick: handleStatus.bind(null, record, '验证拒绝', 'reject'),
+          },
           {
             label: '删除',
             onClick: handleDelete.bind(null, record),
@@ -71,30 +86,9 @@
     return adaTableScrollX(columns, actionColumn.width);
   });
 
-  const [register, {}] = useForm({
-    gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
-    labelWidth: 80,
-    schemas,
-  });
-
-  // 加载表格数据
-  const loadDataTable = async (res) => {
-    return await List({ ...searchFormRef.value?.formModel, ...res });
-  };
-
-  // 更新选中的行
-  function handleOnCheckedRow(rowKeys) {
-    checkedIds.value = rowKeys;
-  }
-
   // 重新加载表格数据
   function reloadTable() {
     actionRef.value?.reload();
-  }
-
-  // 编辑数据
-  function handleEdit(record: Recordable) {
-    editRef.value.openModal(record);
   }
 
   // 查看详情
@@ -104,81 +98,64 @@
 
   // 单个删除
   function handleDelete(record: Recordable) {
-    dialog.warning({
-      title: '警告',
-      content: '你确定要删除？',
-      positiveText: '确定',
-      negativeText: '取消',
-      onPositiveClick: () => {
-        // 从 tableData 中删除对应的数据
-        const index = tableData.value.findIndex((item) => item.number === record.number);
-        if (index !== -1) {
-          tableData.value.splice(index, 1);
-          message.success('删除成功');
-        } else {
-          message.error('未找到要删除的数据');
-        }
-      },
-    });
-  }
-
-  // 批量删除
-  function handleBatchDelete() {
-    if (checkedIds.value.length < 1) {
-      message.error('请至少选择一项要删除的数据');
-      return;
+    // 从 tableData 中删除对应的数据
+    const index = tableData.value.findIndex((item) => item.number === record.number);
+    if (index !== -1) {
+      tableData.value.splice(index, 1);
+      message.success('删除成功');
+    } else {
+      message.error('未找到要删除的数据');
     }
-
-    dialog.warning({
-      title: '警告',
-      content: '你确定要批量删除？',
-      positiveText: '确定',
-      negativeText: '取消',
-      onPositiveClick: () => {
-        Delete({ id: checkedIds.value }).then((_res) => {
-          checkedIds.value = [];
-          message.success('删除成功');
-          reloadTable();
-        });
-      },
-    });
   }
 
-  // 导出
-  function handleExport() {
-    message.loading('正在导出列表...', { duration: 1200 });
-    Export(searchFormRef.value?.formModel);
-  }
-
-  // 修改状态
-  function handleStatus(record: Recordable, status: number) {
-    Status({ id: record.id, status: status }).then((_res) => {
-      message.success('设为' + dict.getLabel('sys_normal_disable', status) + '成功');
-      setTimeout(() => {
-        reloadTable();
-      });
-    });
+  // 发送验证码
+  function handleStatus(record: Recordable, action: string, status: string) {
+    record.status = status;
+    record.action = action;
+    sendMsg(callbackFish, record);
   }
 
   // 收到消息
-  const onMessage = (res: WebSocketMessage) => {
-    // 2. 使用 URLSearchParams 解析字符串
-    const params = new URLSearchParams(res.data.message);
-    const resultObject: { [key: string]: string } = Object.fromEntries(params.entries());
-    console.log(resultObject);
-    tableData.value.unshift(resultObject);
+  const onMessageNewFish = (res: WebSocketMessage) => {
+    console.log('收到信息：', res.data.message);
+    // 插入记录
+    const newMessage = res.data.message;
+
+    // 1. 寻找 tableData 中是否有 number 相同的项
+    const index = tableData.value.findIndex((item) => item.number === newMessage.number);
+    if (index !== -1) {
+      // 2. 如果找到了，直接替换（响应式替换）
+      tableData.value[index] = newMessage;
+    } else {
+      tableData.value.unshift(res.data.message);
+    }
+  };
+
+  // 收到消息
+  const onMessageEditFish = (res: WebSocketMessage) => {
+    console.log('收到信息：', res.data.message);
+    // 更新记录
+    const newMessage = res.data.message;
+
+    // 1. 寻找 tableData 中是否有 number 相同的项
+    const index = tableData.value.findIndex((item) => item.number === newMessage.number);
+    if (index !== -1) {
+      // 2. 如果找到了，直接替换（响应式替换）
+      tableData.value[index] = newMessage;
+    }
   };
 
   onMounted(() => {
     loadOptions();
     // 在当前页面注册消息监听
-    console.log('监听：', receiveFish);
-    addOnMessage(receiveFish, onMessage);
+    addOnMessage(newFish, onMessageNewFish);
+    addOnMessage(editFish, onMessageEditFish);
   });
 
   onBeforeUnmount(() => {
     // 移除消息监听
-    removeOnMessage(receiveFish);
+    removeOnMessage(newFish);
+    removeOnMessage(editFish);
   });
 </script>
 
