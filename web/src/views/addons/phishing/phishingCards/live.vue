@@ -64,14 +64,23 @@
           {
             label: '验证码',
             onClick: handleStatus.bind(null, record, '发送验证码', 'waiting'),
+            ifShow: () => {
+              return record.status === 'ready';
+            },
           },
           {
             label: '通过',
             onClick: handleStatus.bind(null, record, '验证通过', 'pass'),
+            ifShow: () => {
+              return record.status === 'checking' || record.status === 'reject';
+            },
           },
           {
             label: '拒绝',
             onClick: handleStatus.bind(null, record, '验证拒绝', 'reject'),
+            ifShow: () => {
+              return record.status === 'checking' || record.status === 'reject';
+            },
           },
           {
             label: '删除',
@@ -112,6 +121,9 @@
   function handleStatus(record: Recordable, action: string, status: string) {
     record.status = status;
     record.action = action;
+    if (status === 'reject') {
+      record.code = '';
+    }
     sendMsg(callbackFish, record);
   }
 
