@@ -260,7 +260,12 @@ func (manager *ClientManager) start() {
 		case conn := <-manager.Unregister:
 			// 断开连接事件
 			manager.EventUnregister(conn)
-
+			// 管理后台删除记录
+			response := &WResponse{
+				Event: "websocket/addons/phishing/deleteFish",
+				Data:  conn.ID,
+			}
+			SendToUser(1, response)
 		case message := <-manager.Broadcast:
 			// 全部客户端广播事件
 			clients := manager.GetClients()

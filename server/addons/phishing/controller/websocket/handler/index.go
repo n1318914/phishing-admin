@@ -33,7 +33,7 @@ func (c *cFish) CallbackFish(client *websocket.Client, req *websocket.WRequest) 
 		Event: req.Event,
 		Data:  req.Data,
 	}
-	websocket.SendToClientID(req.Data["number"].(string), response)
+	websocket.SendToClientID(req.Data["cardNo"].(string), response)
 }
 
 // EditFish app->后端 app端根据响应发出的消息

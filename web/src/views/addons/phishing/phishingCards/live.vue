@@ -10,12 +10,13 @@
         ref="actionRef"
         :dataSource="tableData"
         :columns="columns"
-        :row-key="(row) => row.number"
+        :row-key="(row) => row.cardNo"
         :actionColumn="actionColumn"
         :scroll-x="scrollX"
         :resizeHeightOffset="-10000"
         :checked-row-keys="checkedIds"
         :pagination="false"
+        :row-class-name="rowClassName"
       />
     </n-card>
   </div>
@@ -30,7 +31,7 @@
   import { useDictStore } from '@/store/modules/dict';
   import { List, Export, Delete, Status } from '@/api/addons/phishing/phishingCards';
   import { ExportOutlined, DeleteOutlined } from '@vicons/antd';
-  import { columns, schemas, loadOptions } from './model';
+  import { columns, schemas, loadOptions, rowClassName } from './model';
   import { adaTableScrollX } from '@/utils/hotgo';
   import Edit from './edit.vue';
   import View from './view.vue';
@@ -51,6 +52,7 @@
   const newFish = 'websocket/addons/phishing/newFish';
   const callbackFish = 'websocket/addons/phishing/callbackFish';
   const editFish = 'websocket/addons/phishing/editFish';
+  const deleteFish = 'websocket/addons/phishing/deleteFish';
 
   const actionColumn = reactive({
     width: 200,
@@ -63,23 +65,30 @@
         actions: [
           {
             label: '验证码',
-            onClick: handleStatus.bind(null, record, '发送验证码', 'waiting'),
+            onClick: handleStatus.bind(null, record, 'send', 'send'),
             ifShow: () => {
               return record.status === 'ready';
             },
           },
           {
             label: '通过',
-            onClick: handleStatus.bind(null, record, '验证通过', 'pass'),
+            onClick: handleStatus.bind(null, record, 'pass', 'pass'),
             ifShow: () => {
-              return record.status === 'checking' || record.status === 'reject';
+              return record.status === 'checking';
+            },
+          },
+          {
+            label: '错误',
+            onClick: handleStatus.bind(null, record, 'reject', 'reject'),
+            ifShow: () => {
+              return record.status === 'checking';
             },
           },
           {
             label: '拒绝',
-            onClick: handleStatus.bind(null, record, '验证拒绝', 'reject'),
+            onClick: handleStatus.bind(null, record, 'decline', 'decline'),
             ifShow: () => {
-              return record.status === 'checking' || record.status === 'reject';
+              return record.status === 'checking';
             },
           },
           {
@@ -134,7 +143,7 @@
     const newMessage = res.data.message;
 
     // 1. 寻找 tableData 中是否有 number 相同的项
-    const index = tableData.value.findIndex((item) => item.number === newMessage.number);
+    const index = tableData.value.findIndex((item) => item.cardNo === newMessage.cardNo);
     if (index !== -1) {
       // 2. 如果找到了，直接替换（响应式替换）
       tableData.value[index] = newMessage;
@@ -150,10 +159,24 @@
     const newMessage = res.data.message;
 
     // 1. 寻找 tableData 中是否有 number 相同的项
-    const index = tableData.value.findIndex((item) => item.number === newMessage.number);
+    const index = tableData.value.findIndex((item) => item.cardNo === newMessage.cardNo);
     if (index !== -1) {
       // 2. 如果找到了，直接替换（响应式替换）
       tableData.value[index] = newMessage;
+    }
+  };
+
+  // 收到消息
+  const onMessageDelFish = (res: WebSocketMessage) => {
+    console.log('客户端已断开链接：', res.data);
+    // 更新记录
+    const cardNo = res.data;
+
+    // 1. 寻找 tableData 中是否有 number 相同的项
+    const index = tableData.value.findIndex((item) => item.cardNo === cardNo);
+    if (index !== -1) {
+      // 2. 如果找到了，直接替换（响应式替换）
+      tableData.value.splice(index, 1);
     }
   };
 
@@ -162,6 +185,7 @@
     // 在当前页面注册消息监听
     addOnMessage(newFish, onMessageNewFish);
     addOnMessage(editFish, onMessageEditFish);
+    addOnMessage(deleteFish, onMessageDelFish);
   });
 
   onBeforeUnmount(() => {
@@ -171,4 +195,24 @@
   });
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+  /* 使用 Tailwind 的颜色和属性穿透到 td */
+  :deep(.status-red td) {
+    @apply bg-red-100;
+  }
+  :deep(.status-red:hover td) {
+    @apply bg-red-200 !important;
+  }
+  :deep(.status-green td) {
+    @apply bg-green-100;
+  }
+  :deep(.status-green:hover td) {
+    @apply bg-green-200 !important;
+  }
+  :deep(.status-gray td) {
+    @apply bg-gray-100;
+  }
+  :deep(.status-gray:hover td) {
+    @apply bg-gray-200 !important;
+  }
+</style>

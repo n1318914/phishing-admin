@@ -24,7 +24,7 @@ import (
 
 const (
 	// 用户连接超时时间
-	heartbeatExpirationTime = 5 * 60
+	heartbeatExpirationTime = 2 * 60
 )
 
 // 用户登录
