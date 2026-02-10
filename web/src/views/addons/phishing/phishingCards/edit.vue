@@ -16,7 +16,6 @@
           <n-form
             ref="formRef"
             :model="formValue"
-            :rules="rules"
             :label-placement="settingStore.isMobile ? 'top' : 'left'"
             :label-width="100"
             class="py-4"
@@ -69,7 +68,7 @@
   import { ref, computed } from 'vue';
   import { useDictStore } from '@/store/modules/dict';
   import { Edit, View } from '@/api/addons/phishing/phishingCards';
-  import { State, newState, rules } from './model';
+  import { State, newState } from './model';
   import { useProjectSettingStore } from '@/store/modules/projectSetting';
   import { useMessage } from 'naive-ui';
   import { adaModalWidth } from '@/utils/hotgo';
