@@ -1,1 +1,0 @@
-import{d as n,s as o,a as p,v as u,f as c,x as l}from"./index-CT4gp84_.js";const i=n({name:"Redirect",setup(){const r=o(),s=p();return u(()=>{const{params:e,query:t}=r,{path:a}=e;s.replace({path:"/"+(Array.isArray(a)?a.join("/"):a),query:t})}),()=>c(l,null,null)}});export{i as default};
