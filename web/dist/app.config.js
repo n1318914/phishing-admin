@@ -1,0 +1,1 @@
+window.__PRODUCTION__HG__CONF__={"VITE_GLOB_APP_TITLE":"HotGo管理系统","VITE_GLOB_APP_SHORT_NAME":"HG","VITE_GLOB_API_URL":"","VITE_GLOB_UPLOAD_URL":"","VITE_GLOB_IMG_URL":"","VITE_GLOB_API_URL_PREFIX":"/admin"};Object.freeze(window.__PRODUCTION__HG__CONF__);Object.defineProperty(window,"__PRODUCTION__HG__CONF__",{configurable:false,writable:false,});

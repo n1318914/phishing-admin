@@ -1,0 +1,1 @@
+import{o as a}from"./index-CT4gp84_.js";function c(r){return{createScriptPromise:new Promise((t,o)=>{a(()=>{const e=document.createElement("script");e.type="text/javascript",e.onload=()=>{t("")},e.onerror=n=>{o(n)},e.src=r,document.head.appendChild(e)})})}}export{c as u};

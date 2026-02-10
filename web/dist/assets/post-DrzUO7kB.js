@@ -1,0 +1,1 @@
+import{cr as t}from"./index-CT4gp84_.js";function e(r){return t.request({url:"/post/list",method:"GET",params:r})}function s(r){return e(r)}function u(r){return t.request({url:"/post/edit",method:"POST",params:r})}function n(r){return t.request({url:"/post/delete",method:"POST",params:r})}export{n as D,u as E,s as a,e as g};

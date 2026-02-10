@@ -1,0 +1,1 @@
+function m(l=12,g=!1){const o="abacdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789",h=g?"abacdefghjklmnopqrstuvwxyz0123456789":o,d=0,i=h.length-1;let a="";for(let e=0,u;e<l;e++)u=function(n,t){return n(d,i,t,n)}(function(n,t,c,f){const s=o.length-10;let r=Math.floor(Math.random()*(t-n+1)+n);return c==0&&r>=s&&(r=f(n,t,c,f)),r},e),a+=o[u];return a}export{m as g};
