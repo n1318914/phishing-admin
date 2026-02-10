@@ -1,0 +1,1 @@
+import t from"./index-BiJQj-MD.js";import{d as s,r as n,o as r,h as a,k as m}from"./index-FXI03K-t.js";const f=s({__name:"index",setup(i){const o=n();return r(()=>{var e;(e=o.value)==null||e.open("https://www.naiveui.com/zh-CN/os-theme/components/button")}),(e,p)=>(a(),m(t,{ref_key:"iframeRef",ref:o,style:{zoom:"0.8"}},null,512))}});export{f as _};
