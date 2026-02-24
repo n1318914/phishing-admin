@@ -51,7 +51,7 @@
     const viewRef = ref();
     const tableData = ref([]);
     const checkedIds = ref([]);
-    const receiveFish = 'websocket/addons/phishing/newFish';
+    const receiveFish = 'websocket/addons/phis/new';
   
     const actionColumn = reactive({
       width: 288,
@@ -223,4 +223,3 @@
   </script>
   
   <style lang="less" scoped></style>
-  

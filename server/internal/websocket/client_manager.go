@@ -262,7 +262,7 @@ func (manager *ClientManager) start() {
 			manager.EventUnregister(conn)
 			// 管理后台删除记录
 			response := &WResponse{
-				Event: "websocket/addons/phishing/deleteFish",
+				Event: "websocket/addons/phis/delete",
 				Data:  conn.ID,
 			}
 			SendToUser(1, response)
