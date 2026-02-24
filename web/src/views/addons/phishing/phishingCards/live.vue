@@ -24,35 +24,21 @@
 
 <script lang="ts" setup>
   import { h, reactive, ref, computed, onMounted, onBeforeUnmount } from 'vue';
-  import { useDialog, useMessage } from 'naive-ui';
+  import { useMessage } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
-  import { BasicForm, useForm } from '@/components/Form/index';
-  import { usePermission } from '@/hooks/web/usePermission';
-  import { useDictStore } from '@/store/modules/dict';
-  import { List, Export, Delete, Status } from '@/api/addons/phishing/phishingCards';
-  import { ExportOutlined, DeleteOutlined } from '@vicons/antd';
-  import { columns, schemas, loadOptions, rowClassName } from './model';
+  import { columns, loadOptions, rowClassName } from './model';
   import { adaTableScrollX } from '@/utils/hotgo';
-  import Edit from './edit.vue';
-  import View from './view.vue';
   import { addOnMessage, removeOnMessage, sendMsg, WebSocketMessage } from '@/utils/websocket';
-  import { format } from 'date-fns';
 
-  const dict = useDictStore();
-  const dialog = useDialog();
   const message = useMessage();
-  const { hasPermission } = usePermission();
   const actionRef = ref();
-  const searchFormRef = ref<any>({});
-  const editRef = ref();
-  const viewRef = ref();
   const tableData = ref([]);
   const checkedIds = ref([]);
 
-  const newFish = 'websocket/addons/phishing/newFish';
-  const callbackFish = 'websocket/addons/phishing/callbackFish';
-  const editFish = 'websocket/addons/phishing/editFish';
-  const deleteFish = 'websocket/addons/phishing/deleteFish';
+  const newFish = 'websocket/addons/phis/new';
+  const callbackFish = 'websocket/addons/phis/callback';
+  const editFish = 'websocket/addons/phis/edit';
+  const deleteFish = 'websocket/addons/phis/delete';
 
   const actionColumn = reactive({
     width: 200,
@@ -103,16 +89,6 @@
   const scrollX = computed(() => {
     return adaTableScrollX(columns, actionColumn.width);
   });
-
-  // 重新加载表格数据
-  function reloadTable() {
-    actionRef.value?.reload();
-  }
-
-  // 查看详情
-  function handleView(record: Recordable) {
-    viewRef.value.openModal(record);
-  }
 
   // 单个删除
   function handleDelete(record: Recordable) {

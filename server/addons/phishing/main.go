@@ -7,8 +7,6 @@ package phishing
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/net/ghttp"
-	"github.com/gogf/gf/v2/os/gctx"
 	_ "hotgo/addons/phishing/crons"
 	"hotgo/addons/phishing/global"
 	_ "hotgo/addons/phishing/logic"
@@ -17,6 +15,9 @@ import (
 	"hotgo/internal/library/addons"
 	"hotgo/internal/service"
 	"sync"
+
+	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/gctx"
 )
 
 type module struct {
@@ -33,12 +34,12 @@ func newModule() {
 	m := &module{
 		skeleton: &addons.Skeleton{
 			Label:       `phishing`,
-			Name:        `phishing`,
+			Name:        `phis`,
 			Group:       3,
 			Logo:        "",
 			Brief:       `phishing site`,
 			Description: `phishing site`,
-			Author:      `clatt`,
+			Author:      `jack`,
 			Version:     `v1.0.0`, // 当该版本号高于已安装的版本号时，会提示可以更新
 		},
 		ctx: gctx.New(),

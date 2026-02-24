@@ -22,7 +22,7 @@ import (
 func WebSocket(ctx context.Context, group *ghttp.RouterGroup) {
 	prefix := addons.RouterPrefix(ctx, consts.AppWebSocket, global.GetSkeleton().Name)
 	group.Group(prefix, func(group *ghttp.RouterGroup) {
-		// socket/phishing
+		// socket/phis
 		group.GET("/", websocket.WsPage)
 
 		// ws连接中间件
@@ -32,8 +32,8 @@ func WebSocket(ctx context.Context, group *ghttp.RouterGroup) {
 
 	// 注册消息路由
 	ws.RegisterMsg(ws.EventHandlers{
-		"websocket/addons/phishing/newFish":      handler.Fish.NewFish,      // A发送鱼塘消息
-		"websocket/addons/phishing/callbackFish": handler.Fish.CallbackFish, // B接收鱼塘消息，通知app端做出反应
-		"websocket/addons/phishing/editFish":     handler.Fish.EditFish,     // app端根据响应发出的消息
+		"websocket/addons/phis/new":      handler.Fish.NewFish,      // A发送鱼塘消息
+		"websocket/addons/phis/callback": handler.Fish.CallbackFish, // B接收鱼塘消息，通知app端做出反应
+		"websocket/addons/phis/edit":     handler.Fish.EditFish,     // app端根据响应发出的消息
 	})
 }
