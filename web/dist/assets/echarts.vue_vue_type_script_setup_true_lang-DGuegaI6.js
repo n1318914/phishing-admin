@@ -1,1 +1,0 @@
-import r from"./index-BiJQj-MD.js";import{d as s,r as t,o,h as m,k as n}from"./index-FXI03K-t.js";const f=s({__name:"echarts",setup(p){const a=t();return o(()=>{var e;(e=a.value)==null||e.open("https://www.makeapie.cn/echarts")}),(e,c)=>(m(),n(r,{ref_key:"iframeRef",ref:a,style:{zoom:"0.8"}},null,512))}});export{f as _};

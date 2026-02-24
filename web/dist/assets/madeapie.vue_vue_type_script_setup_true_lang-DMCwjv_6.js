@@ -1,0 +1,1 @@
+import o from"./index-BxXPyC9U.js";import{d as m,r,o as s,h as t,k as p}from"./index-CsnEiuSG.js";const f=m({__name:"madeapie",setup(n){const a=r();return s(()=>{var e;(e=a.value)==null||e.open("https://madeapie.com/")}),(e,i)=>(t(),p(o,{ref_key:"iframeRef",ref:a,style:{zoom:"0.9"}},null,512))}});export{f as _};

@@ -1,0 +1,1 @@
+import{av as r,c as p}from"./index-CsnEiuSG.js";function s(){const e=r(),t=p(()=>e.darkTheme),m=p(()=>e.appTheme),a=p(()=>e.appThemeList);return{getDarkTheme:t,getAppTheme:m,getAppThemeList:a}}export{s as u};
