@@ -1,0 +1,1 @@
+import{c8 as r,cC as s,c as t,cD as c}from"./index-C_gYeop4.js";function u(){const m=r(s,null);return t(()=>{if(m===null)return c;const{mergedThemeRef:{value:n},mergedThemeOverridesRef:{value:e}}=m,o=(n==null?void 0:n.common)||c;return e!=null&&e.common?Object.assign({},o,e.common):o})}export{u};

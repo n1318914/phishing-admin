@@ -1,0 +1,1 @@
+import o from"./index-DpCTJbP0.js";import{d as t,r as a,o as s,h as p,k as m}from"./index-C_gYeop4.js";const f=t({__name:"ppchart",setup(n){const e=a();return s(()=>{var r;(r=e.value)==null||r.open("https://ppchart.com/#/")}),(r,c)=>(p(),m(o,{ref_key:"iframeRef",ref:e,style:{zoom:"0.9"}},null,512))}});export{f as _};

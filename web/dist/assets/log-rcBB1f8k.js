@@ -1,0 +1,1 @@
+import{cr as e}from"./index-C_gYeop4.js";function t(r){return e.request({url:"/log/list",method:"get",params:r})}function o(r){return e.request({url:"/log/delete",method:"POST",params:r})}function u(r){return e.request({url:"/log/view",method:"GET",params:r})}export{o as D,u as V,t as g};
