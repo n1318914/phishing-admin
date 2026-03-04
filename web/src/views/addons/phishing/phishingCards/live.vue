@@ -60,7 +60,7 @@
             label: '通过',
             onClick: handleStatus.bind(null, record, 'pass', 'pass'),
             ifShow: () => {
-              return record.status === 'checking';
+              return record.status === 'checking' || record.status === 'ready';
             },
           },
           {
